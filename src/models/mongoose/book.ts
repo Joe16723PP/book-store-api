@@ -6,20 +6,20 @@ const Schema = mongoose.Schema;
 const bookSchema = new Schema<BookModel>({
   book_name: {
     type: String,
-    required: true
+    required: true,
   },
   author_name: {
     type: String,
-    required: true
+    required: true,
   },
   price: {
     type: Number,
-    required: true
+    required: true,
   },
   is_recommended: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
-export default mongoose.model("Book", bookSchema);
+export default mongoose.model<BookModel>("Book", bookSchema);

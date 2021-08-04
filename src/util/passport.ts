@@ -17,7 +17,7 @@ const jwtAuthentication = new jwtStrategy(jwtOptions, (payload: UserModel, next)
   // payload from extracted token
   const id = payload._id;
   User.findById(id)
-    .then((user: UserModel) => {
+    .then((user) => {
       if (user) {
         next(null, user._id.toString());
       } else {
