@@ -1,7 +1,7 @@
 export interface BookModel {
   _id: any;
-  name: string;
-  author: string;
+  book_name: string;
+  author_name: string;
   price: number;
   is_recommended: boolean;
 }

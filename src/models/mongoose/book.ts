@@ -4,11 +4,11 @@ import { BookModel } from "../data_model/book.model";
 const Schema = mongoose.Schema;
 
 const bookSchema = new Schema<BookModel>({
-  name: {
+  book_name: {
     type: String,
     required: true
   },
-  author: {
+  author_name: {
     type: String,
     required: true
   },
@@ -18,7 +18,7 @@ const bookSchema = new Schema<BookModel>({
   },
   is_recommended: {
     type: Boolean,
-    required: true
+    default: false
   }
 });
 

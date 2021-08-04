@@ -34,11 +34,11 @@ const getBooksBySearch: RequestHandler = (req, res, next) => {
 };
 
 const addBook: RequestHandler = async (req, res, next) => {
-  const { name, author, price, is_recommended } = req.body;
+  const { book_name, author_name, price, is_recommended } = req.body;
   // validate field
   const newBook = new Book({
-    name,
-    author,
+    book_name,
+    author_name,
     price,
     is_recommended
   });
@@ -49,12 +49,12 @@ const addBook: RequestHandler = async (req, res, next) => {
 }
 
 const updateBook: RequestHandler = async (req, res, next) => {
-  const { bookId, name, author, price, is_recommended } = req.body;
+  const { bookId, book_name, author_name, price, is_recommended } = req.body;
   // validate field
   const updatedBook = await Book.findById(bookId);
 
-  updatedBook.name = name;
-  updatedBook.author = author;
+  updatedBook.book_name = book_name;
+  updatedBook.author_name = author_name;
   updatedBook.price = price;
   updatedBook.is_recommended = is_recommended;
 
