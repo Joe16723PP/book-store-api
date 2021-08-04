@@ -25,6 +25,7 @@ const userSchema = new Schema<UserModel>({
     type: String,
     required: true
   },
+  // use bookid with ref for populate funciton of mongoose
   books: [
     {
       bookId: {
@@ -35,9 +36,12 @@ const userSchema = new Schema<UserModel>({
   ],
 });
 
-userSchema.methods.orderBook = function (book: BookModel) {
-  const updatedBooks = [...this.books, book._id.toString()];
-
+userSchema.methods.orderBook = function (orders: string[]) {
+  const updatedBooks = [...this.books];
+  orders.forEach(id => {
+    updatedBooks.push({ bookId: id});
+  })
+  
   this.books = updatedBooks;
   return this.save();
 };

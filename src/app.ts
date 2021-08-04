@@ -6,6 +6,7 @@ import cors from "cors";
 import authRoutes from "./routes/auth";
 import userRoutes from "./routes/user";
 import bookRoutes from "./routes/book";
+import { authMiddleware } from "./util/passport";
 
 const app: Application = express();
 const port = 3000;
@@ -28,8 +29,8 @@ app.get("/", (req, res, next) => {
 
 // routes
 app.use(authRoutes);
-app.use("/user", userRoutes);
-app.use("/book", bookRoutes);
+app.use("/users", authMiddleware, userRoutes);
+app.use("/books", bookRoutes);
 
 
 mongoose

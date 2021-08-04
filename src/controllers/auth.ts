@@ -7,7 +7,7 @@ import { PRIVATE_KEY } from "../util/private-key.js";
 import { UserModel } from '../models/data_model/user.model';
 
 const postSignUp: RequestHandler = async (req, res, next) => {
-  const { username, password, name, surname, date_of_birth } = req.body as UserModel;
+  const { username, password, name, surname, date_of_birth } = req.body;
   if (!username || !password) {
     return res.status(401).json({
       message: "username or password is undefined!",
