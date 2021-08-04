@@ -18,15 +18,25 @@ const getExternalBooks: RequestHandler = async (req, res, next) => {
   const books = await bookResponse.json() as ExternalBookModel[];
   const recBooks = await recommendedResponse.json() as ExternalBookModel[];
 
-  console.log(books, recBooks);
-  
+  let recommendedBooks: ExternalBookModel[] = [];
+  let filteredBooks: ExternalBookModel[] = [];
 
-  const updatedBooks = books.map(book => {
-    const patched = recBooks.find(recBook => {
+  books.forEach(book => {
+    const matched = recBooks.find(recBook => {
       return recBook.id === book.id;
     });
-    return {...book, is_recommended: !!patched};
+    if (matched) {
+      recommendedBooks.push({...book, is_recommended: !!matched})
+    } else {
+      filteredBooks.push({...book, is_recommended: !!matched});
+    }
   })
+
+  const sortedBooks = filteredBooks.sort((a, b) => {
+    return a.book_name.localeCompare(b.book_name);
+  });
+
+  const updatedBooks = [...recommendedBooks, ...sortedBooks];
 
   return res.json(updatedBooks)
   
