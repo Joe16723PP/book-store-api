@@ -1,3 +1,4 @@
+import { UserModel } from './../models/data_model/user.model';
 import { RequestHandler } from "express";
 import { validationResult } from "express-validator";
 import bcrypt from "bcryptjs";
@@ -13,11 +14,7 @@ const postSignUp: RequestHandler = async (req, res, next) => {
     return res.status(400).json({ errors: errors.array() });
   }
   const { username, password, name, surname, date_of_birth } = req.body;
-  if (!username || !password) {
-    return res.status(401).json({
-      message: "username or password is undefined!",
-    });
-  }
+
   const user = await User.findOne({ username });
   if (user) {
     return res.status(401).json({
@@ -36,7 +33,12 @@ const postSignUp: RequestHandler = async (req, res, next) => {
     date_of_birth,
     book: [],
   });
-  await newUser.save();
+
+  try {
+    await newUser.save();
+  } catch (error) {
+    return next(error);
+  }
 
   const token = generateToken(newUser._id.toString(), username);
   return res.json({
@@ -52,7 +54,12 @@ const postSignIn: RequestHandler = async (req, res, next) => {
   }
 
   const { username, password } = req.body;
-  const user = await User.findOne({ username });
+  let user;
+  try {
+    user = await User.findOne({ username });
+  } catch (error) {
+    return next(error);
+  }
   if (!user) {
     return res.status(404).json({
       message: "user not found",

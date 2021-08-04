@@ -12,7 +12,7 @@ export interface UserModel extends Document {
   orders: {
     items: [
       {
-        bookId: any;
+        bookId: any; // any for mongoose population
         quantity: number;
       }
     ];

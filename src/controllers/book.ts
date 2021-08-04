@@ -60,9 +60,13 @@ const getBooks: RequestHandler = async (req, res, next) => {
 };
 const getBookById: RequestHandler = async (req, res, next) => {
   const bookId = req.params.id;
-  const book = await Book.findById(bookId);
-  if (book) {
-    return res.json(book._doc);
+  try {
+    const book = await Book.findById(bookId);
+    if (book) {
+      return res.json(book._doc);
+    }
+  } catch (error) {
+    return next(error);
   }
 
   return res.status(404).json({
@@ -91,7 +95,11 @@ const addBook: RequestHandler = async (req, res, next) => {
     is_recommended,
   });
 
-  await newBook.save();
+  try {
+    await newBook.save();
+  } catch (error) {
+    return next(error);
+  }
 
   return res.status(200).json(newBook._doc);
 };
@@ -120,10 +128,20 @@ const updateBook: RequestHandler = async (req, res, next) => {
 
 const deleteBooksById: RequestHandler = async (req, res, next) => {
   const bookId = req.body.bookId;
-  await Book.findByIdAndRemove(bookId);
-  return res.json({
-    msg: `deleted book id ${bookId}`,
-  });
+  
+  try {
+    const deletedBook = await Book.findByIdAndRemove(bookId);
+    if (deletedBook) {
+      return res.json({
+        msg: `deleted book ${deletedBook?.book_name}`,
+      });
+    } 
+    return res.status(401).json({
+      msg: "deleted fail"
+    })
+  } catch (error) {
+    return next(error);
+  }
 };
 
 export default {

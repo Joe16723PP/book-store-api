@@ -1,3 +1,8 @@
+/*
+  book store api developed by jirot chaitamart 
+  using express with mvc programing
+*/
+
 import mongoose from "mongoose";
 import express, { Application } from "express";
 import bodyParser from "body-parser";
@@ -20,9 +25,9 @@ const config = {
 
 // cors config for test
 const corsOptions = {
-  "origin": "*",
-  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-}
+  origin: "*",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+};
 const MONGODB_URI = `mongodb+srv://${config.username}:${config.psw}@cluster0.d05gz.mongodb.net/${config.database}`;
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -43,10 +48,17 @@ app.use("/books", bookRoutes);
 // no match route
 app.use((req, res, next) => {
   res.status(404).json({
-      msg: "route not found"
-    })
+    msg: "route not found",
+  });
 });
 
+//@ts-ignore
+app.use((err, req, res, next) => {
+  // save to log service then response to client
+  res.status(500).json({
+    msg: "Internal server error",
+  });
+});
 
 mongoose
   .connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
