@@ -1,9 +1,9 @@
 import { RequestHandler } from "express";
+import { validationResult } from "express-validator";
 import fetch from "node-fetch";
 import Book from "../models/mongoose/book";
 
 import { ExternalBookModel } from "./../models/data_model/external-book.model";
-import { BookModel } from "./../models/data_model/book.model";
 
 const externalUri = {
   books: "https://scb-test-book-publisher.herokuapp.com/books",
@@ -32,9 +32,11 @@ const getExternalBooks: RequestHandler = async (req, res, next) => {
   });
 
   const sortedBooks = filteredBooks.sort((a, b) => {
+    // locale compare for other lang
     return a.book_name.localeCompare(b.book_name);
   });
 
+  // concat array
   const updatedBooks = [...recommendedBooks, ...sortedBooks];
 
   return res.json(updatedBooks);
@@ -42,7 +44,7 @@ const getExternalBooks: RequestHandler = async (req, res, next) => {
 
 /* 
   this code below is for get the list of books on my own db
-  it use mongoose model to mananging data
+  it use mongoose model to manange data
 */
 const getBooks: RequestHandler = async (req, res, next) => {
   const books = await Book.find();
@@ -75,8 +77,13 @@ const getBooksBySearch: RequestHandler = (req, res, next) => {
 };
 
 const addBook: RequestHandler = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const { book_name, author_name, price, is_recommended } = req.body;
-  // validate field
+
   const newBook = new Book({
     book_name,
     author_name,
@@ -90,6 +97,11 @@ const addBook: RequestHandler = async (req, res, next) => {
 };
 
 const updateBook: RequestHandler = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const { bookId, book_name, author_name, price, is_recommended } = req.body;
   const updatedBook = await Book.findById(bookId);
   if (updatedBook) {

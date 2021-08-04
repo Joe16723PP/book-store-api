@@ -69,7 +69,7 @@ userSchema.methods.addToOrder = function (bookList: BookModel[]) {
     }
     // update old order with new order
     const updatedOrder: { items: IOrder[] } = { items: updatedOrderItems };
-    //
+    // fixed error with order interface
     this.orders = updatedOrder as {
       items: [{ bookId: any; quantity: number }];
     };

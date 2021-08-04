@@ -1,4 +1,5 @@
 import { RequestHandler } from "express";
+import { validationResult } from "express-validator";
 import mongoose from "mongoose";
 
 import User from "../models/mongoose/user";
@@ -70,6 +71,11 @@ const deleteUser: RequestHandler = async (req, res, next) => {
 };
 
 const orderBooks: RequestHandler = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const bookIds: string[] = req.body.orders;
   const userId = req.user;
   const user = await User.findById(userId);
@@ -83,11 +89,11 @@ const orderBooks: RequestHandler = async (req, res, next) => {
     user
       .populate("orders.items.bookId")
       .execPopulate()
-      .then((user: any) => {
+      .then((user) => {
         return user.orders.items;
       })
-      .then((books: any) => {
-        return books.map((item: any) => {
+      .then((books) => {
+        return books.map((item) => {
           return {
             bookName: item.bookId.book_name,
             price: item.bookId.price,
@@ -95,9 +101,9 @@ const orderBooks: RequestHandler = async (req, res, next) => {
           };
         });
       })
-      .then((books: any) => {
+      .then((books) => {
         let totalPrice = 0;
-        books.forEach((book: any) => {
+        books.forEach((book) => {
           totalPrice += book.price * book.quantity;
         });
 

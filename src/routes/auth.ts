@@ -1,19 +1,23 @@
 import { Router } from "express";
-import { body } from 'express-validator';
-import authControllers from '../controllers/auth';
+import { body } from "express-validator";
+import authControllers from "../controllers/auth";
 
 const router: Router = Router();
 
-const authValidator = [
+const signUpValidator = [
   body("username").trim().isLength({ min: 5 }),
   body("password").trim().isLength({ min: 5 }),
   body("name").trim().isEmpty(),
   body("surname").trim().isEmpty(),
-  body("date_of_birth").trim().isEmpty()
+  body("date_of_birth").trim().isEmpty(),
 ];
 
-router.post('/sign-in', authValidator, authControllers.postSignIn);
-router.post('/sign-up', authControllers.postSignUp);
+const signInValidator = [
+  body("username").trim().isEmpty(),
+  body("password").trim().isEmpty()
+]
 
+router.post("/sign-in", signInValidator, authControllers.postSignIn);
+router.post("/sign-up", signUpValidator, authControllers.postSignUp);
 
 export default router;

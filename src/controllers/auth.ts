@@ -1,4 +1,5 @@
-import { RequestHandler } from 'express';
+import { RequestHandler } from "express";
+import { validationResult } from "express-validator";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/mongoose/user";
@@ -6,6 +7,11 @@ import User from "../models/mongoose/user";
 import { PRIVATE_KEY } from "../util/private-key.js";
 
 const postSignUp: RequestHandler = async (req, res, next) => {
+  // just for simple validation
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   const { username, password, name, surname, date_of_birth } = req.body;
   if (!username || !password) {
     return res.status(401).json({
@@ -28,7 +34,7 @@ const postSignUp: RequestHandler = async (req, res, next) => {
     name,
     surname,
     date_of_birth,
-    book: []
+    book: [],
   });
   await newUser.save();
 
@@ -40,6 +46,11 @@ const postSignUp: RequestHandler = async (req, res, next) => {
 };
 
 const postSignIn: RequestHandler = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const { username, password } = req.body;
   const user = await User.findOne({ username });
   if (!user) {
