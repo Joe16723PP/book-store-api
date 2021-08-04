@@ -4,18 +4,19 @@ import jwt from "jsonwebtoken";
 import User from "../models/mongoose/user";
 
 import { PRIVATE_KEY } from "../util/private-key.js";
+import { UserModel } from '../models/data_model/user.model';
 
 const postSignUp: RequestHandler = async (req, res, next) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
+  const { username, password, name, surname } = req.body;
+  if (!username || !password) {
     return res.status(401).json({
-      message: "email or password is undefined!",
+      message: "username or password is undefined!",
     });
   }
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ username });
   if (user) {
     return res.status(401).json({
-      message: "this email is already in used!",
+      message: "this user is already in used!",
     });
   }
 
@@ -23,21 +24,24 @@ const postSignUp: RequestHandler = async (req, res, next) => {
   const hashedPsw = bcrypt.hashSync(password, salt);
 
   const newUser = new User({
-    email,
+    username,
     password: hashedPsw,
+    name,
+    surname,
+    book: []
   });
   await newUser.save();
 
-  const token = generateToken(newUser._id.toString(), email);
+  const token = generateToken(newUser._id.toString(), username);
   return res.json({
     token,
-    email,
+    username,
   });
 };
 
 const postSignIn: RequestHandler = async (req, res, next) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
+  const { username, password } = req.body;
+  const user = await User.findOne({ username });
   if (!user) {
     return res.status(404).json({
       message: "user not found",
@@ -51,18 +55,18 @@ const postSignIn: RequestHandler = async (req, res, next) => {
     });
   }
 
-  const token = generateToken(user._id.toString(), user.email);
+  const token = generateToken(user._id.toString(), user.username);
   return res.json({
     token,
-    email,
+    username,
   });
 };
 
-const generateToken = (uid: string, email: string) => {
+const generateToken = (uid: string, username: string) => {
   return jwt.sign(
     {
       _id: uid,
-      email: email,
+      username,
     },
     PRIVATE_KEY,
     {
