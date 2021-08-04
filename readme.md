@@ -1,10 +1,7 @@
-1. install types devDependency 'types/somepackage'
-2. change tsconfig field 'target': 'es6'
-3. add field to tsconfig 'moduleResolution': 'node'
-4. uncomment field 'outDir': './dist' // ts to js directory
-5. uncomment field 'rootDir': './src' // ts source code
-
----
+book store api developed with express typescript and mongoose
+that connected to mongo atlas cloud database
 
 to compile ts (install typescript globally first)
 run command 'tsc'
+
+then run 'yarn start' or 'npm start'
