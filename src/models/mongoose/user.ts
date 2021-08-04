@@ -21,7 +21,11 @@ const userSchema = new Schema<UserModel>({
     type: String,
     required: true
   },
-  book: [
+  date_of_birth: {
+    type: String,
+    required: true
+  },
+  books: [
     {
       bookId: {
         type: Schema.Types.ObjectId,
@@ -32,9 +36,9 @@ const userSchema = new Schema<UserModel>({
 });
 
 userSchema.methods.orderBook = function (book: BookModel) {
-  const updatedBooks = [...this.book, book._id.toString()];
+  const updatedBooks = [...this.books, book._id.toString()];
 
-  this.book = updatedBooks;
+  this.books = updatedBooks;
   return this.save();
 };
 

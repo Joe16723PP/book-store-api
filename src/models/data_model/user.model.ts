@@ -4,7 +4,8 @@ export interface UserModel {
   password: string;
   name: string;
   surname: string;
-  book: [
+  date_of_birth: string;
+  books: [
     {
       bookId: any // type expected is objectid 
     }

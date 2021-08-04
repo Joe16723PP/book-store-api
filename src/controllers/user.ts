@@ -1,9 +1,17 @@
 import { RequestHandler } from 'express';
 
+import User from '../models/mongoose/user';
 
-const getUser: RequestHandler = (req, res, next) => {
+
+const getUser: RequestHandler = async (req, res, next) => {
+  const userId = req.user;
+  const user = await User.findById(userId);
+
   return res.json({
-    msg: "get user",
+    name: user.name,
+    surname: user.surname,
+    date_of_birth: user.date_of_birth,
+    books: user.books
   });
 };
 
@@ -23,9 +31,11 @@ const resetPassword: RequestHandler = (req, res, next) => {
   });
 };
 
-const deleteUser: RequestHandler = (req, res, next) => {
+const deleteUser: RequestHandler = async (req, res, next) => {
+  const userId = req.user;
+  const user = await User.findByIdAndDelete(userId);
   return res.json({
-    msg: "delete user",
+    msg: `delete user id ${userId}`,
   });
 };
 
