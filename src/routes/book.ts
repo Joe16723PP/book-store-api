@@ -1,5 +1,7 @@
 import { Router } from "express";
-import bookController from '../controllers/book'
+import { body, validationResult } from 'express-validator';
+
+import bookController from '../controllers/book';
 const router = Router();
 
 router.get("/", bookController.getBooks);

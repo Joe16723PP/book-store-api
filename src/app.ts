@@ -40,6 +40,13 @@ app.use(authRoutes);
 app.use("/users", authMiddleware, userRoutes);
 app.use("/books", bookRoutes);
 
+// no match route
+app.use((req, res, next) => {
+  res.status(404).json({
+      msg: "route not found"
+    })
+});
+
 
 mongoose
   .connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
