@@ -26,24 +26,49 @@ const userSchema = new Schema<UserModel>({
     required: true
   },
   // use bookid with ref for populate funciton of mongoose
-  books: [
-    {
-      bookId: {
-        type: Schema.Types.ObjectId,
-        ref: "Book",
-      },
-    }
-  ],
+  orders: {
+    items: [
+      {
+        bookId: {
+          type: Schema.Types.ObjectId,
+          required: true,
+          ref: "Book"
+        },
+        quantity: {
+          type: Number,
+          required: true
+        }
+      }
+    ]
+  }
 });
 
-userSchema.methods.orderBook = function (orders: string[]) {
-  const updatedBooks = [...this.books];
-  orders.forEach(id => {
-    updatedBooks.push({ bookId: id});
-  })
+userSchema.methods.addToOrder = function (bookList) {
+  bookList.forEach((book: any) => {
+    const orderBookIndex = this.orders.items.findIndex((orderBook: {bookId: string, quantity: number}) => {
+      return orderBook.bookId.toString() === book._id.toString();
+    });
   
-  this.books = updatedBooks;
+    let newQuantity = 1;
+    const updatedOrderItems = [...this.orders.items];
+    if (orderBookIndex >= 0) {
+      // update quantity
+      newQuantity = updatedOrderItems[orderBookIndex].quantity + 1;
+      updatedOrderItems[orderBookIndex].quantity = newQuantity;
+    } else {
+      // add new book
+      updatedOrderItems.push({
+        bookId: book._id,
+        quantity: newQuantity,
+      });
+    }
+    // update old order with new order
+    const updatedOrder = { items: updatedOrderItems };
+    this.orders = updatedOrder;
+
+  })
   return this.save();
+
 };
 
 export default mongoose.model("User", userSchema);

@@ -1,7 +1,8 @@
-import { BookModel } from './../models/data_model/book.model';
 import { RequestHandler } from 'express';
+import mongoose from 'mongoose';
 
 import User from '../models/mongoose/user';
+import Book from '../models/mongoose/book';
 
 
 const getUser: RequestHandler = async (req, res, next) => {
@@ -46,42 +47,45 @@ const deleteUser: RequestHandler = async (req, res, next) => {
   const userId = req.user;
   const user = await User.findByIdAndDelete(userId);
   return res.json({
-    msg: `delete user id ${user.username}`,
+    msg: `deleted user: ${user.username} success`,
   });
 };
 
 const orderBooks: RequestHandler = async (req, res, next) => {
-  const orders: string[] = req.body.orders;
+  const bookIds: string[] = req.body.orders;
   const userId = req.user;
   const user = await User.findById(userId);
+  const newBookIds = bookIds.map(id => {
+    return mongoose.Types.ObjectId(id);
+  });
 
-  const updatedUser = await user.orderBook(orders);
-  updatedUser.populate("books.bookId") // populate book detail
-  .execPopulate() // make population to promise function
-  .then((result: {books: BookModel[]}) => {
-    return result.books;
+  const bookList = await Book.find({'_id': { $in: newBookIds}});
+  await user.addToOrder(bookList);
+  user.populate("orders.items.bookId")
+  .execPopulate()
+  .then((user: any) => {
+    return user.orders.items
   })
-  .then((data: {bookId: any}[]) => {
-    // restructure result to BookModel
-    return data.map(object => {
+  .then((books: any) => {
+    return books.map((item: any) => {
       return {
-        ...object.bookId._doc
+        bookName: item.bookId.book_name,
+        price: item.bookId.price,
+        quantity: item.quantity
       }
     })
   })
-  .then((books: BookModel[]) => {
+  .then((books: any) => {
     let totalPrice = 0;
-    books.forEach(book => {
-      totalPrice += book.price;
-    })
+    books.forEach((book: any) => {
+      totalPrice += (book.price * book.quantity);
+    });
+
     return res.json({
-      totalPrice,
-      numOfBook: books.length
+      orders: books,
+      totalPrice
     })
-  });
-
-
-
+  })
 };
 
 export default {

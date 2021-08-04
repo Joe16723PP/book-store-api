@@ -18,8 +18,8 @@ const getExternalBooks: RequestHandler = async (req, res, next) => {
   const books = await bookResponse.json() as ExternalBookModel[];
   const recBooks = await recommendedResponse.json() as ExternalBookModel[];
 
-  let recommendedBooks: ExternalBookModel[] = [];
-  let filteredBooks: ExternalBookModel[] = [];
+  const recommendedBooks: ExternalBookModel[] = [];
+  const filteredBooks: ExternalBookModel[] = [];
 
   books.forEach(book => {
     const matched = recBooks.find(recBook => {
@@ -39,12 +39,11 @@ const getExternalBooks: RequestHandler = async (req, res, next) => {
   const updatedBooks = [...recommendedBooks, ...sortedBooks];
 
   return res.json(updatedBooks)
-  
 }
 
 
 /* 
-  this commented code is for get the list of books on my own db
+  this code below is for get the list of books on my own db
   it use mongoose model to mananging data
 */
 const getBooks: RequestHandler = async (req, res, next) => {
