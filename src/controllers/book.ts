@@ -1,8 +1,42 @@
 import { RequestHandler } from 'express';
-
+import fetch from 'node-fetch'
 import Book from '../models/mongoose/book';
 
+import { ExternalBookModel } from './../models/data_model/external-book.model';
+import { BookModel } from './../models/data_model/book.model';
 
+
+const externalUri = {
+  books: "https://scb-test-book-publisher.herokuapp.com/books",
+  recommendedBooks: "https://scb-test-book-publisher.herokuapp.com/books/recommendation"
+}
+
+
+const getExternalBooks: RequestHandler = async (req, res, next) => {
+  const bookResponse = await fetch(externalUri.books);
+  const recommendedResponse = await fetch(externalUri.recommendedBooks);
+  const books = await bookResponse.json() as ExternalBookModel[];
+  const recBooks = await recommendedResponse.json() as ExternalBookModel[];
+
+  console.log(books, recBooks);
+  
+
+  const updatedBooks = books.map(book => {
+    const patched = recBooks.find(recBook => {
+      return recBook.id === book.id;
+    });
+    return {...book, is_recommended: !!patched};
+  })
+
+  return res.json(updatedBooks)
+  
+}
+
+
+/* 
+  this commented code is for get the list of books on my own db
+  it use mongoose model to mananging data
+*/
 const getBooks: RequestHandler = async (req, res, next) => {
   const books = await Book.find();
   if (books.length !== 0) {
@@ -53,6 +87,7 @@ const updateBook: RequestHandler = async (req, res, next) => {
   // validate field
   const updatedBook = await Book.findById(bookId);
 
+  // manuel update
   updatedBook.book_name = book_name;
   updatedBook.author_name = author_name;
   updatedBook.price = price;
@@ -72,6 +107,7 @@ const deleteBooksById: RequestHandler = async (req, res, next) => {
 }
 
 export default {
+  getExternalBooks,
   getBooks,
   getBookById,
   getBooksBySearch,

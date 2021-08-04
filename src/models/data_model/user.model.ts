@@ -1,5 +1,5 @@
 export interface UserModel {
-  _id: any;
+  _id?: any; // objectId
   username: string;
   password: string;
   name: string;
@@ -7,7 +7,7 @@ export interface UserModel {
   date_of_birth: string;
   books: [
     {
-      bookId: any // type expected is objectid 
+      bookId: any // objectId
     }
   ]
 }

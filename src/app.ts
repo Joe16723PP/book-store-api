@@ -10,16 +10,24 @@ import { authMiddleware } from "./util/passport";
 
 const app: Application = express();
 const port = 3000;
+
+// mongo atlas config
 const config = {
   username: "jirot-joe-16723",
   psw: "5XwKaVTw6fGnynNt",
   database: "ScbTest",
 };
+
+// cors config for test
+const corsOptions = {
+  "origin": "*",
+  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+}
 const MONGODB_URI = `mongodb+srv://${config.username}:${config.psw}@cluster0.d05gz.mongodb.net/${config.database}`;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.get("/", (req, res, next) => {
   res.json({
@@ -35,8 +43,8 @@ app.use("/books", bookRoutes);
 
 mongoose
   .connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then((result) => {
-    console.log("runing on port 3000");
+  .then(() => {
+    console.log("scb test, book api server is runing on port 3000");
     app.listen(port);
   })
   .catch((err) => {

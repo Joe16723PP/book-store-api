@@ -12,7 +12,7 @@ const jwtOptions = {
   secretOrKey: PRIVATE_KEY,
 };
 
-// check is valid username
+// verify user token
 const jwtAuthentication = new jwtStrategy(jwtOptions, (payload: UserModel, next) => {
   // payload from extracted token
   const id = payload._id;

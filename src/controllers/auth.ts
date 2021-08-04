@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 import User from "../models/mongoose/user";
 
 import { PRIVATE_KEY } from "../util/private-key.js";
-import { UserModel } from '../models/data_model/user.model';
 
 const postSignUp: RequestHandler = async (req, res, next) => {
   const { username, password, name, surname, date_of_birth } = req.body;
