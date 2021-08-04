@@ -19,9 +19,7 @@ const getBookById: RequestHandler = async (req, res, next) => {
   const bookId = req.params.id;
   const book = await Book.findById(bookId);
   if (book) {
-    return res.json({
-      book,
-    });
+    return res.json(book._doc);
   }
 
   return res.status(404).json({
@@ -36,15 +34,41 @@ const getBooksBySearch: RequestHandler = (req, res, next) => {
 };
 
 const addBook: RequestHandler = async (req, res, next) => {
+  const { name, author, price, is_recommended } = req.body;
+  // validate field
+  const newBook = new Book({
+    name,
+    author,
+    price,
+    is_recommended
+  });
 
+  await newBook.save();
+
+  return res.status(200).json(newBook._doc);
 }
 
 const updateBook: RequestHandler = async (req, res, next) => {
+  const { bookId, name, author, price, is_recommended } = req.body;
+  // validate field
+  const updatedBook = await Book.findById(bookId);
 
+  updatedBook.name = name;
+  updatedBook.author = author;
+  updatedBook.price = price;
+  updatedBook.is_recommended = is_recommended;
+
+  await updatedBook.save();
+
+  return res.status(200).json(updatedBook._doc);
 }
 
-const deleteBooksById: RequestHandler = (req, res, next) => {
-
+const deleteBooksById: RequestHandler = async (req, res, next) => {
+  const bookId = req.body.bookId;
+  await Book.findByIdAndRemove(bookId);
+  return res.json({
+    msg: `deleted book id ${bookId}`
+  })
 }
 
 export default {
