@@ -2,6 +2,7 @@ import { RequestHandler } from 'express';
 
 import Book from '../models/mongoose/book';
 
+
 const getBooks: RequestHandler = async (req, res, next) => {
   const books = await Book.find();
   if (books.length !== 0) {
@@ -34,8 +35,23 @@ const getBooksBySearch: RequestHandler = (req, res, next) => {
   });
 };
 
+const addBook: RequestHandler = async (req, res, next) => {
+
+}
+
+const updateBook: RequestHandler = async (req, res, next) => {
+
+}
+
+const deleteBooksById: RequestHandler = (req, res, next) => {
+
+}
+
 export default {
   getBooks,
   getBookById,
   getBooksBySearch,
+  addBook,
+  updateBook,
+  deleteBooksById
 };

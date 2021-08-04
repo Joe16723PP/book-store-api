@@ -3,8 +3,9 @@ import express, { Application } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 
-import authRoutes from "./routes/auth.js";
-import userRoutes from "./routes/user.js";
+import authRoutes from "./routes/auth";
+import userRoutes from "./routes/user";
+import bookRoutes from "./routes/book";
 
 const app: Application = express();
 const port = 3000;
@@ -28,7 +29,7 @@ app.get("/", (req, res, next) => {
 // routes
 app.use(authRoutes);
 app.use("/user", userRoutes);
-// app.use("/course", userRoutes);
+app.use("/book", bookRoutes);
 
 
 mongoose

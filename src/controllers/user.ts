@@ -1,17 +1,15 @@
 import { RequestHandler } from 'express';
 
 
-const signIn: RequestHandler = (req, res, next) => {
-  return res.json({
-    msg: "get user",
-  });
-}
-
 const getUser: RequestHandler = (req, res, next) => {
   return res.json({
     msg: "get user",
   });
 };
+
+const updateUser: RequestHandler = (req, res, next) => {
+
+}
 
 const changePassword: RequestHandler = (req, res, next) => {
   return res.json({
@@ -31,13 +29,14 @@ const deleteUser: RequestHandler = (req, res, next) => {
   });
 };
 
-const enrollToCourse: RequestHandler = (req, res, next) => {
+const orderBooks: RequestHandler = (req, res, next) => {
 };
 
 export default {
   getUser,
+  updateUser,
   changePassword,
   resetPassword,
   deleteUser,
-  enrollToCourse,
+  orderBooks
 };
