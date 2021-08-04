@@ -1,13 +1,19 @@
 import { Router } from "express";
-import userRoutes from '../controllers/user'
-import { authMiddleware } from "../util/passport";
+import { body } from 'express-validator';
+
+import userRoutes from '../controllers/user';
+
 const router = Router();
+
+const userValidator = [
+  body('orders').isLength({ min: 1})
+];
 
 router.get("/", userRoutes.getUser);
 router.put("/", userRoutes.updateUser);
 router.patch("/change-password", userRoutes.changePassword);
 router.patch("/reset-password", userRoutes.resetPassword);
 router.delete("/", userRoutes.deleteUser);
-router.post("/orders", userRoutes.orderBooks);
+router.post("/orders", userValidator, userRoutes.orderBooks);
 
 export default router;
