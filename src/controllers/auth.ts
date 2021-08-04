@@ -1,4 +1,4 @@
-import { UserModel } from './../models/data_model/user.model';
+import { UserModel } from "./../models/data_model/user.model";
 import { RequestHandler } from "express";
 import { validationResult } from "express-validator";
 import bcrypt from "bcryptjs";
