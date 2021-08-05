@@ -54,7 +54,9 @@ app.use((req, res, next) => {
 
 //@ts-ignore
 app.use((err, req, res, next) => {
-  // save to log service then response to client
+  // save err log then response to client
+  console.log(err);
+
   res.status(500).json({
     msg: "Internal server error",
   });

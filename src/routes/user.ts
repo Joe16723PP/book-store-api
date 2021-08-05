@@ -1,13 +1,11 @@
 import { Router } from "express";
-import { body } from 'express-validator';
+import { body } from "express-validator";
 
-import userRoutes from '../controllers/user';
+import userRoutes from "../controllers/user";
 
 const router = Router();
 
-const userValidator = [
-  body('orders').isLength({ min: 1})
-];
+const userValidator = [body("orders").isArray({ min: 1 })];
 
 router.get("/", userRoutes.getUser);
 router.put("/", userRoutes.updateUser);
