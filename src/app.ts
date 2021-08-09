@@ -65,7 +65,7 @@ app.use((err, req, res, next) => {
 mongoose
   .connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
-    console.log("scb test, book api server is runing on port 3000");
+    console.log(`scb test, book api server is runing on port ${port}`);
     app.listen(port);
   })
   .catch((err) => {
