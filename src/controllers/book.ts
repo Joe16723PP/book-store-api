@@ -127,7 +127,7 @@ const updateBook: RequestHandler = async (req, res, next) => {
 };
 
 const deleteBooksById: RequestHandler = async (req, res, next) => {
-  const bookId = req.body.bookId;
+  const bookId = req.params.bookId;
   
   try {
     const deletedBook = await Book.findByIdAndRemove(bookId);

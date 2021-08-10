@@ -17,6 +17,6 @@ router.get("/:id", bookController.getBookById);
 // router.get("/", bookController.getBooksBySearch);
 router.post("/", bookValidator, bookController.addBook);
 router.put("/", bookValidator, bookController.updateBook);
-router.delete("/", bookController.deleteBooksById);
+router.delete("/:id", bookController.deleteBooksById);
 
 export default router;
