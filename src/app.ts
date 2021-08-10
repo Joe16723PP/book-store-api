@@ -71,3 +71,6 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
+
+// for unit test
+export default app;
